@@ -21,12 +21,14 @@
       $booleanTypes = @(
         'bool','system.boolean'
       );
+      $processedTypes = @();
       $numericTypes = @(
         'byte','int16','int','float','double','decimal',
         'uint16','uint32','uint64', 
         'system.byte','system.int16','system,int32','system,int64',
         'system.uint16','system,uint32','system,uint64'
         );
+          
     }
     
     process {
@@ -39,6 +41,13 @@
             }
         }
         
+        if( $processedTypes -contains $inputobject.getType() )
+        {
+            return;
+        }
+
+        $processedTypes += $inputobject.GetType();
+
         $properties = $inputobject | get-member -MemberType Properties | where {$_.name -ne 'SSItemMode'} | where {
             $n = $_.name;
             write-debug "INPUT $n";
